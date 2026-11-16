@@ -63,7 +63,7 @@ export = class HikvisionDevice extends Homey.Device {
     this.disconnect();
     const opts = this.connectionOptions();
     if (!opts.host) {
-      this.setUnavailable('No address configured').catch(this.error);
+      this.setUnavailable(this.homey.__('device.no_address')).catch(this.error);
       return;
     }
     const app = this.homey.app as HikvisionAppLike;
@@ -73,7 +73,7 @@ export = class HikvisionDevice extends Homey.Device {
         this.setAvailable().catch(this.error);
       },
       onDisconnected: (err) => {
-        this.setUnavailable(`Connection lost: ${err.message}`).catch(this.error);
+        this.setUnavailable(`${this.homey.__('device.connection_lost')}: ${err.message}`).catch(this.error);
       },
     });
   }

@@ -34,7 +34,7 @@ export = class NvrCameraDriver extends Homey.Driver {
       info = await api.getDeviceInfo();
       channels = await api.getChannels();
       if (channels.length === 0) {
-        throw new Error('Connected, but no video channels were found on this device.');
+        throw new Error(this.homey.__('pair.no_channels'));
       }
       form = data;
       this.log(`Pairing NVR ${info.model} (${info.serial}): ${channels.length} channels`);

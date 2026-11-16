@@ -24,7 +24,7 @@
 </head>
 <body>
   <div class="hik-form">
-    <label for="address" data-i18n="pair.address">NVR/DVR IP address / hostname</label>
+    <label for="address" data-i18n="pair.address_nvr">NVR/DVR IP address / hostname</label>
     <input id="address" type="text" placeholder="192.168.1.100" autocomplete="off" />
 
     <div class="hik-row">
@@ -67,7 +67,7 @@
         password: document.getElementById('password').value,
       };
       if (!data.address) {
-        Homey.alert('Please enter the IP address of the NVR/DVR.');
+        Homey.alert(Homey.__('pair.enter_address'));
         return;
       }
       button.disabled = true;

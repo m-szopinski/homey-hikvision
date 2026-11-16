@@ -1,1 +1,18 @@
-{}
+{
+  "pair": {
+    "address": "IP address / hostname",
+    "address_nvr": "NVR/DVR IP address / hostname",
+    "port": "Port",
+    "username": "Username",
+    "password": "Password",
+    "https": "Use HTTPS",
+    "connect": "Connect",
+    "hint": "Make sure the ISAPI/CGI integration protocol is enabled on the device (Configuration → Network → Advanced Settings → Integration Protocol) and that the account has remote notification permissions.",
+    "enter_address": "Please enter the IP address of the device.",
+    "no_channels": "Connected, but no video channels were found on this device."
+  },
+  "device": {
+    "no_address": "No address configured",
+    "connection_lost": "Connection lost"
+  }
+}

@@ -71,7 +71,7 @@
     button.addEventListener('click', function () {
       var data = formData();
       if (!data.address) {
-        Homey.alert('Please enter the IP address of the camera.');
+        Homey.alert(Homey.__('pair.enter_address'));
         return;
       }
       button.disabled = true;

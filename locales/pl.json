@@ -1,0 +1,18 @@
+{
+  "pair": {
+    "address": "Adres IP / nazwa hosta",
+    "address_nvr": "Adres IP / nazwa hosta NVR/DVR",
+    "port": "Port",
+    "username": "Nazwa użytkownika",
+    "password": "Hasło",
+    "https": "Użyj HTTPS",
+    "connect": "Połącz",
+    "hint": "Upewnij się, że na urządzeniu włączony jest protokół integracji ISAPI/CGI (Konfiguracja → Sieć → Ustawienia zaawansowane → Protokół integracji) oraz że konto ma uprawnienia do zdalnych powiadomień.",
+    "enter_address": "Podaj adres IP urządzenia.",
+    "no_channels": "Połączono, ale nie znaleziono żadnych kanałów wideo na tym urządzeniu."
+  },
+  "device": {
+    "no_address": "Nie skonfigurowano adresu",
+    "connection_lost": "Utracono połączenie"
+  }
+}
