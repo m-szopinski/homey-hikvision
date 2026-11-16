@@ -1,0 +1,52 @@
+{
+  "id": "region_exiting",
+  "title": {
+    "en": "Region exited",
+    "nl": "Gebied verlaten",
+    "pl": "Opuszczenie obszaru"
+  },
+  "hint": {
+    "en": "Triggered the moment the camera reports a region exiting detection.",
+    "nl": "Wordt geactiveerd zodra de camera het verlaten van een gebied meldt.",
+    "pl": "Wyzwalane w chwili, gdy kamera zgłosi opuszczenie obszaru."
+  },
+  "tokens": [
+    {
+      "name": "event_type",
+      "type": "string",
+      "title": {
+        "en": "Event type",
+        "nl": "Type gebeurtenis",
+        "pl": "Typ zdarzenia"
+      },
+      "example": "linecrossing"
+    },
+    {
+      "name": "channel",
+      "type": "number",
+      "title": {
+        "en": "Channel",
+        "nl": "Kanaal",
+        "pl": "Kanał"
+      },
+      "example": 1
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "title": {
+        "en": "Description",
+        "nl": "Omschrijving",
+        "pl": "Opis"
+      },
+      "example": "linedetection alarm"
+    }
+  ],
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=camera|nvr_camera"
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "name": {
+    "en": "Camera",
+    "nl": "Camera",
+    "pl": "Kamera"
+  },
+  "class": "camera",
+  "capabilities": [
+    "alarm_motion",
+    "alarm_generic",
+    "alarm_tamper"
+  ],
+  "capabilitiesOptions": {
+    "alarm_generic": {
+      "title": {
+        "en": "Smart event",
+        "nl": "Slimme gebeurtenis",
+        "pl": "Zdarzenie inteligentne"
+      }
+    }
+  },
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [
+    "lan"
+  ],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "start"
+    }
+  ],
+  "settings": [
+    {
+      "type": "group",
+      "label": {
+        "en": "Connection",
+        "nl": "Verbinding",
+        "pl": "Połączenie"
+      },
+      "children": [
+        {
+          "id": "address",
+          "type": "text",
+          "label": {
+            "en": "IP address / hostname",
+            "nl": "IP-adres / hostnaam",
+            "pl": "Adres IP / nazwa hosta"
+          },
+          "value": ""
+        },
+        {
+          "id": "port",
+          "type": "number",
+          "label": {
+            "en": "HTTP(S) port",
+            "nl": "HTTP(S)-poort",
+            "pl": "Port HTTP(S)"
+          },
+          "value": 80,
+          "min": 1,
+          "max": 65535
+        },
+        {
+          "id": "use_https",
+          "type": "checkbox",
+          "label": {
+            "en": "Use HTTPS",
+            "nl": "Gebruik HTTPS",
+            "pl": "Użyj HTTPS"
+          },
+          "value": false
+        },
+        {
+          "id": "username",
+          "type": "text",
+          "label": {
+            "en": "Username",
+            "nl": "Gebruikersnaam",
+            "pl": "Nazwa użytkownika"
+          },
+          "value": "admin"
+        },
+        {
+          "id": "password",
+          "type": "password",
+          "label": {
+            "en": "Password",
+            "nl": "Wachtwoord",
+            "pl": "Hasło"
+          },
+          "value": ""
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "label": {
+        "en": "Events",
+        "nl": "Gebeurtenissen",
+        "pl": "Zdarzenia"
+      },
+      "children": [
+        {
+          "id": "channel",
+          "type": "number",
+          "label": {
+            "en": "Channel number",
+            "nl": "Kanaalnummer",
+            "pl": "Numer kanału"
+          },
+          "value": 1,
+          "min": 1,
+          "max": 256,
+          "hint": {
+            "en": "Channel reported in event notifications. For a directly connected camera this is almost always 1.",
+            "nl": "Kanaal dat in gebeurtenismeldingen wordt gerapporteerd. Voor een direct verbonden camera is dit vrijwel altijd 1.",
+            "pl": "Kanał raportowany w powiadomieniach o zdarzeniach. Dla kamery podłączonej bezpośrednio to niemal zawsze 1."
+          }
+        },
+        {
+          "id": "alarm_auto_reset",
+          "type": "number",
+          "label": {
+            "en": "Alarm reset time (seconds)",
+            "nl": "Alarm-resettijd (seconden)",
+            "pl": "Czas resetu alarmu (sekundy)"
+          },
+          "value": 10,
+          "min": 1,
+          "max": 600,
+          "hint": {
+            "en": "The camera repeats an event notification about once per second while the detection lasts. When no repeat arrives within this time, the alarm is considered ended.",
+            "nl": "De camera herhaalt een gebeurtenismelding ongeveer elke seconde zolang de detectie duurt. Als er binnen deze tijd geen herhaling komt, wordt het alarm als beëindigd beschouwd.",
+            "pl": "Kamera powtarza powiadomienie o zdarzeniu mniej więcej co sekundę, dopóki detekcja trwa. Jeśli w tym czasie nie nadejdzie powtórzenie, alarm uznawany jest za zakończony."
+          }
+        }
+      ]
+    }
+  ]
+}

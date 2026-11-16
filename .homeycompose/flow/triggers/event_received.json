@@ -1,0 +1,52 @@
+{
+  "id": "event_received",
+  "title": {
+    "en": "An event was received",
+    "nl": "Een gebeurtenis ontvangen",
+    "pl": "Odebrano zdarzenie"
+  },
+  "hint": {
+    "en": "Triggered for every event the device reports (motion, line crossing, intrusion, face detection, …). Use the 'Event type' tag to filter.",
+    "nl": "Wordt geactiveerd voor elke gebeurtenis die het apparaat meldt (beweging, lijnoverschrijding, inbraak, gezichtsdetectie, …). Gebruik de tag 'Type gebeurtenis' om te filteren.",
+    "pl": "Wyzwalane dla każdego zdarzenia zgłoszonego przez urządzenie (ruch, przekroczenie linii, wtargnięcie, detekcja twarzy, …). Użyj tagu 'Typ zdarzenia' do filtrowania."
+  },
+  "tokens": [
+    {
+      "name": "event_type",
+      "type": "string",
+      "title": {
+        "en": "Event type",
+        "nl": "Type gebeurtenis",
+        "pl": "Typ zdarzenia"
+      },
+      "example": "linecrossing"
+    },
+    {
+      "name": "channel",
+      "type": "number",
+      "title": {
+        "en": "Channel",
+        "nl": "Kanaal",
+        "pl": "Kanał"
+      },
+      "example": 1
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "title": {
+        "en": "Description",
+        "nl": "Omschrijving",
+        "pl": "Opis"
+      },
+      "example": "linedetection alarm"
+    }
+  ],
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=camera|nvr_camera"
+    }
+  ]
+}

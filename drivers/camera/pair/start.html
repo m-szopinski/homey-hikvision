@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    .hik-form { padding: 0 1em; font-family: inherit; }
+    .hik-form label { display: block; margin: 0.6em 0 0.2em; font-size: 0.9em; font-weight: 500; }
+    .hik-form input[type="text"],
+    .hik-form input[type="number"],
+    .hik-form input[type="password"] {
+      width: 100%; box-sizing: border-box; padding: 0.55em 0.7em;
+      border: 1px solid #ccc; border-radius: 6px; font-size: 1em;
+    }
+    .hik-row { display: flex; gap: 0.8em; }
+    .hik-row > div { flex: 1; }
+    .hik-check { margin-top: 0.8em; display: flex; align-items: center; gap: 0.5em; }
+    .hik-button {
+      margin-top: 1.2em; width: 100%; padding: 0.7em; font-size: 1em;
+      background: #D71920; color: #fff; border: none; border-radius: 6px; cursor: pointer;
+    }
+    .hik-button:disabled { opacity: 0.6; cursor: wait; }
+    .hik-hint { font-size: 0.8em; color: #888; margin-top: 0.8em; }
+  </style>
+</head>
+<body>
+  <div class="hik-form">
+    <label for="address" data-i18n="pair.address">IP address / hostname</label>
+    <input id="address" type="text" placeholder="192.168.1.64" autocomplete="off" />
+
+    <div class="hik-row">
+      <div>
+        <label for="port" data-i18n="pair.port">Port</label>
+        <input id="port" type="number" value="80" min="1" max="65535" />
+      </div>
+      <div>
+        <label for="username" data-i18n="pair.username">Username</label>
+        <input id="username" type="text" value="admin" autocomplete="off" />
+      </div>
+    </div>
+
+    <label for="password" data-i18n="pair.password">Password</label>
+    <input id="password" type="password" autocomplete="off" />
+
+    <div class="hik-check">
+      <input id="use_https" type="checkbox" />
+      <label for="use_https" style="margin:0" data-i18n="pair.https">Use HTTPS</label>
+    </div>
+
+    <button id="connect" class="hik-button" data-i18n="pair.connect">Connect</button>
+
+    <div class="hik-hint" data-i18n="pair.hint">
+      Make sure the ISAPI/CGI integration protocol is enabled on the device
+      (Configuration &rarr; Network &rarr; Advanced Settings &rarr; Integration Protocol)
+      and that the account has remote notification permissions.
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var button = document.getElementById('connect');
+
+    function formData() {
+      return {
+        address: document.getElementById('address').value,
+        port: parseInt(document.getElementById('port').value, 10) || 80,
+        use_https: document.getElementById('use_https').checked,
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+      };
+    }
+
+    button.addEventListener('click', function () {
+      var data = formData();
+      if (!data.address) {
+        Homey.alert('Please enter the IP address of the camera.');
+        return;
+      }
+      button.disabled = true;
+
+      Homey.emit('validate', data)
+        .then(function (info) {
+          var id = info.serial
+            ? 'hik-' + info.serial
+            : 'hik-' + data.address + '-' + data.port;
+          return Homey.createDevice({
+            name: info.name || info.model || 'Hikvision Camera',
+            data: { id: id },
+            settings: {
+              address: data.address.trim(),
+              port: data.port,
+              use_https: data.use_https,
+              username: data.username,
+              password: data.password,
+              channel: 1,
+            },
+          });
+        })
+        .then(function () {
+          return Homey.done();
+        })
+        .catch(function (err) {
+          button.disabled = false;
+          Homey.alert((err && err.message) || String(err));
+        });
+    });
+  </script>
+</body>
+</html>

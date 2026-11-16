@@ -1,0 +1,33 @@
+{
+  "id": "com.mszopinski.hikvision",
+  "version": "1.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Hikvision Cameras & NVR"
+  },
+  "description": {
+    "en": "Real-time events from Hikvision cameras and NVRs (motion, line crossing, intrusion and more) using a persistent ISAPI alert stream — no polling, no delays.",
+    "nl": "Realtime gebeurtenissen van Hikvision-camera's en NVR's (beweging, lijnoverschrijding, inbraakdetectie en meer) via een permanente ISAPI-alertstream — geen polling, geen vertraging.",
+    "pl": "Zdarzenia z kamer i rejestratorów Hikvision w czasie rzeczywistym (ruch, przekroczenie linii, wtargnięcie i inne) poprzez stałe połączenie ISAPI alertStream — bez odpytywania i bez opóźnień."
+  },
+  "category": [
+    "security"
+  ],
+  "brandColor": "#D71920",
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "m-szopinski",
+    "email": "m-szopinski@users.noreply.github.com"
+  },
+  "support": "https://github.com/m-szopinski/homey-hikvision/issues",
+  "source": "https://github.com/m-szopinski/homey-hikvision"
+}

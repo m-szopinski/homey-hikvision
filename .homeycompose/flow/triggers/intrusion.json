@@ -1,0 +1,52 @@
+{
+  "id": "intrusion",
+  "title": {
+    "en": "Intrusion detected",
+    "nl": "Inbraak gedetecteerd",
+    "pl": "Wykryto wtargnięcie"
+  },
+  "hint": {
+    "en": "Triggered the moment the camera reports an intrusion (field) detection.",
+    "nl": "Wordt geactiveerd zodra de camera een inbraakdetectie (gebied) meldt.",
+    "pl": "Wyzwalane w chwili, gdy kamera zgłosi wtargnięcie w strefę."
+  },
+  "tokens": [
+    {
+      "name": "event_type",
+      "type": "string",
+      "title": {
+        "en": "Event type",
+        "nl": "Type gebeurtenis",
+        "pl": "Typ zdarzenia"
+      },
+      "example": "linecrossing"
+    },
+    {
+      "name": "channel",
+      "type": "number",
+      "title": {
+        "en": "Channel",
+        "nl": "Kanaal",
+        "pl": "Kanał"
+      },
+      "example": 1
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "title": {
+        "en": "Description",
+        "nl": "Omschrijving",
+        "pl": "Opis"
+      },
+      "example": "linedetection alarm"
+    }
+  ],
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=camera|nvr_camera"
+    }
+  ]
+}

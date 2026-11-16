@@ -1,0 +1,52 @@
+{
+  "id": "motion_detected",
+  "title": {
+    "en": "Motion detected",
+    "nl": "Beweging gedetecteerd",
+    "pl": "Wykryto ruch"
+  },
+  "hint": {
+    "en": "Triggered the moment the camera reports motion detection (VMD/PIR).",
+    "nl": "Wordt geactiveerd zodra de camera bewegingsdetectie (VMD/PIR) meldt.",
+    "pl": "Wyzwalane w chwili, gdy kamera zgłosi detekcję ruchu (VMD/PIR)."
+  },
+  "tokens": [
+    {
+      "name": "event_type",
+      "type": "string",
+      "title": {
+        "en": "Event type",
+        "nl": "Type gebeurtenis",
+        "pl": "Typ zdarzenia"
+      },
+      "example": "linecrossing"
+    },
+    {
+      "name": "channel",
+      "type": "number",
+      "title": {
+        "en": "Channel",
+        "nl": "Kanaal",
+        "pl": "Kanał"
+      },
+      "example": 1
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "title": {
+        "en": "Description",
+        "nl": "Omschrijving",
+        "pl": "Opis"
+      },
+      "example": "linedetection alarm"
+    }
+  ],
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=camera|nvr_camera"
+    }
+  ]
+}
