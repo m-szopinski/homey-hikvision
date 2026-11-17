@@ -152,6 +152,61 @@
           }
         }
       ]
+    },
+    {
+      "type": "group",
+      "label": {
+        "en": "Camera preview",
+        "nl": "Cameravoorvertoning",
+        "pl": "Podgląd z kamery"
+      },
+      "children": [
+        {
+          "id": "video_stream",
+          "type": "dropdown",
+          "label": {
+            "en": "Live video stream",
+            "nl": "Live videostream",
+            "pl": "Strumień wideo na żywo"
+          },
+          "value": "sub",
+          "values": [
+            {
+              "id": "sub",
+              "label": {
+                "en": "Sub-stream (recommended)",
+                "nl": "Substream (aanbevolen)",
+                "pl": "Strumień pomocniczy (zalecany)"
+              }
+            },
+            {
+              "id": "main",
+              "label": {
+                "en": "Main stream",
+                "nl": "Hoofdstream",
+                "pl": "Strumień główny"
+              }
+            }
+          ],
+          "hint": {
+            "en": "The sub-stream has a lower resolution but is usually H.264, which plays on every phone and browser. The main stream is often H.265, which some devices cannot play. Live video requires Homey Pro (2023 or newer) or Homey Pro mini with v12.7.0 or newer; other Homeys show a snapshot only.",
+            "nl": "De substream heeft een lagere resolutie maar is meestal H.264, dat op elke telefoon en browser afspeelt. De hoofdstream is vaak H.265, dat sommige apparaten niet kunnen afspelen. Live video vereist Homey Pro (2023 of nieuwer) of Homey Pro mini met v12.7.0 of nieuwer; andere Homeys tonen alleen een momentopname.",
+            "pl": "Strumień pomocniczy ma niższą rozdzielczość, ale zwykle jest w H.264, który odtworzy każdy telefon i przeglądarka. Strumień główny często jest w H.265, którego niektóre urządzenia nie odtworzą. Wideo na żywo wymaga Homey Pro (2023 lub nowszego) albo Homey Pro mini z v12.7.0 lub nowszym; pozostałe Homey pokazują tylko zdjęcie."
+          }
+        },
+        {
+          "id": "rtsp_port",
+          "type": "number",
+          "label": {
+            "en": "RTSP port",
+            "nl": "RTSP-poort",
+            "pl": "Port RTSP"
+          },
+          "value": 554,
+          "min": 1,
+          "max": 65535
+        }
+      ]
     }
   ]
 }

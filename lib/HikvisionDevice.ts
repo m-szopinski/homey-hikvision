@@ -1,10 +1,40 @@
 'use strict';
 
 import Homey from 'homey';
-import { DigestHttpOptions } from './DigestHttp';
+import { DigestHttp, DigestHttpOptions } from './DigestHttp';
 import {
   HikEvent, MOTION_EVENTS, TAMPER_EVENTS, TRIGGER_CARDS,
 } from './events';
+
+/**
+ * Minimal typings for the video API (Homey >= 12.7.0). It is missing from the
+ * bundled SDK types and absent at runtime on older firmware, so it is always
+ * feature-detected before use.
+ */
+interface HomeyVideo {
+  registerVideoUrlListener(listener: () => Promise<{ url: string }>): unknown;
+  unregister(): Promise<void>;
+}
+
+interface HomeyVideosManager {
+  createVideoRTSP(options?: {
+    acceptInvalidCertificates?: boolean;
+    demuxer?: string;
+    disableWebRTCProxy?: boolean;
+  }): Promise<HomeyVideo>;
+}
+
+interface VideoCapableDevice {
+  setCameraVideo?(id: string, title: string, video: HomeyVideo): Promise<unknown>;
+}
+
+// Image and video share one id, so Homey shows the snapshot as the
+// background while the live stream is loading.
+const PREVIEW_ID = 'live';
+
+// Cleared app-wide once Homey reports it cannot stream video, so remaining
+// devices skip the attempt instead of each logging the same failure.
+let videoSupported = true;
 
 interface HikvisionAppLike extends Homey.App {
   connections: {
@@ -33,10 +63,106 @@ export = class HikvisionDevice extends Homey.Device {
   private releaseConnection: (() => void) | null = null;
   private clearTimers: Map<string, NodeJS.Timeout> = new Map();
   private reconnectTimer: NodeJS.Timeout | null = null;
+  private snapshotImage: Homey.Image | null = null;
+  private liveVideo: HomeyVideo | null = null;
 
   async onInit() {
     this.connect();
+    this.setupPreview().catch(this.error);
     this.log(`${this.getName()} initialized (channel ${this.getChannel()})`);
+  }
+
+  /**
+   * Register the camera preview: a JPEG snapshot (every Homey version) and,
+   * when the firmware supports it, a live RTSP stream. Both sources read the
+   * current settings on every request, so they never need re-registering
+   * after a settings change.
+   */
+  private async setupPreview(): Promise<void> {
+    const title = this.homey.__('device.preview_title');
+
+    try {
+      const image = await this.homey.images.createImage();
+      image.setStream((stream: NodeJS.WritableStream) => this.pipeSnapshot(stream));
+      await this.setCameraImage(PREVIEW_ID, title, image);
+      this.snapshotImage = image;
+    } catch (err) {
+      this.error('Failed to register camera snapshot:', err);
+    }
+
+    const { videos } = this.homey as unknown as { videos?: HomeyVideosManager };
+    const device = this as unknown as VideoCapableDevice;
+    if (!videos || typeof device.setCameraVideo !== 'function') {
+      // Firmware older than v12.7.0: no video API at all.
+      this.markVideoUnsupported('no video API in this Homey version');
+      return;
+    }
+    if (!videoSupported) return;
+
+    let video: HomeyVideo;
+    try {
+      video = await videos.createVideoRTSP();
+    } catch (err) {
+      // The API can exist on hardware that cannot stream (only Homey Pro
+      // 2023+ and Homey Pro mini can); Homey then throws "Videos are not
+      // supported on this Homey". Expected, not an error.
+      this.markVideoUnsupported(err instanceof Error ? err.message : String(err));
+      return;
+    }
+
+    try {
+      video.registerVideoUrlListener(async () => ({ url: this.rtspUrl() }));
+      await device.setCameraVideo(PREVIEW_ID, title, video);
+      this.liveVideo = video;
+    } catch (err) {
+      this.error('Failed to register live video:', err);
+      video.unregister().catch(() => undefined);
+    }
+  }
+
+  private markVideoUnsupported(reason: string): void {
+    if (!videoSupported) return;
+    videoSupported = false;
+    this.log(`Live video unavailable (${reason}), camera preview shows snapshots only`);
+  }
+
+  private async pipeSnapshot(stream: NodeJS.WritableStream): Promise<void> {
+    const opts = this.connectionOptions();
+    if (!opts.host) throw new Error(this.homey.__('device.no_address'));
+
+    // Channel N, main stream → streaming channel N01 (full-resolution JPEG).
+    const path = `/ISAPI/Streaming/channels/${this.getChannel() * 100 + 1}/picture`;
+    const res = await new DigestHttp(opts).open('GET', path, 10000);
+    // An unhandled 'error' on the response would crash the whole app.
+    res.on('error', (err: Error) => this.error('Snapshot transfer failed:', err.message));
+    if (res.statusCode !== 200) {
+      res.resume();
+      throw new Error(`Snapshot request failed (HTTP ${res.statusCode})`);
+    }
+    res.pipe(stream);
+  }
+
+  private rtspUrl(): string {
+    const opts = this.connectionOptions();
+    if (!opts.host) throw new Error(this.homey.__('device.no_address'));
+
+    const port = Number(this.getSetting('rtsp_port')) || 554;
+    const streamType = this.getSetting('video_stream') === 'main' ? 1 : 2;
+    const auth = opts.username
+      ? `${encodeURIComponent(opts.username)}:${encodeURIComponent(opts.password)}@`
+      : '';
+    return `rtsp://${auth}${opts.host}:${port}/Streaming/Channels/${this.getChannel() * 100 + streamType}`;
+  }
+
+  private teardownPreview(): void {
+    if (this.snapshotImage) {
+      this.snapshotImage.unregister().catch(this.error);
+      this.snapshotImage = null;
+    }
+    if (this.liveVideo) {
+      this.liveVideo.unregister().catch(this.error);
+      this.liveVideo = null;
+    }
   }
 
   private connectionOptions(): DigestHttpOptions {
@@ -109,6 +235,11 @@ export = class HikvisionDevice extends Homey.Device {
     this.log(`event started: ${event.type} (raw: ${event.rawType}, channel ${event.channel})`);
     this.syncCapabilities();
 
+    // Let open device views fetch a fresh frame showing the event.
+    if (this.snapshotImage) {
+      this.snapshotImage.update().catch((err: Error) => this.error('Failed to refresh snapshot:', err));
+    }
+
     const tokens = {
       event_type: event.type,
       channel: event.channel,
@@ -178,6 +309,7 @@ export = class HikvisionDevice extends Homey.Device {
 
   async onDeleted() {
     this.disconnect();
+    this.teardownPreview();
   }
 
   async onUninit() {

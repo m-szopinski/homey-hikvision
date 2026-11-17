@@ -40,6 +40,25 @@ sub-second latency and short-lived events are never lost. On top of that:
 Both device types expose the capabilities **Motion alarm**, **Smart event
 alarm** (any VCA event: line crossing, intrusion, …) and **Tamper alarm**.
 
+## Camera preview
+
+Every device shows a camera preview in the Homey app:
+
+- **Snapshot** — a full-resolution JPEG fetched on demand from
+  `/ISAPI/Streaming/channels/<channel>01/picture`. Works on every Homey
+  version. It is refreshed whenever an event starts, so an open device view
+  shows the moment of detection.
+- **Live video** — the device's RTSP stream
+  (`rtsp://<address>:554/Streaming/Channels/<channel>02`), on Homey Pro
+  (2023 or newer) and Homey Pro mini running v12.7.0 or newer. Other models
+  (e.g. Homey Pro Early 2019) and older firmware show the snapshot only.
+
+In the device settings (*Camera preview*) you can switch between the
+**sub-stream** (default: lower resolution, usually H.264, plays everywhere)
+and the **main stream** (full resolution, but often H.265, which some phones
+and browsers cannot play), and change the RTSP port. Homey does not transcode
+video, so the stream's codec has to be one the viewing device supports.
+
 ## Flow triggers
 
 - Motion detected
@@ -61,6 +80,9 @@ alarm** (any VCA event: line crossing, intrusion, …) and **Tamper alarm**.
 3. Configure and arm the detections themselves (motion, line crossing,
    intrusion …) in the camera/NVR web interface, and make sure their schedule
    is active. The app receives whatever the device reports.
+4. For live video, RTSP must be enabled (it is by default; *Configuration →
+   Network → Basic Settings → Port → RTSP Port*) and the account needs the
+   *Remote: Live View* permission.
 
 ## Development
 

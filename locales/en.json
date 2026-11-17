@@ -13,6 +13,7 @@
   },
   "device": {
     "no_address": "No address configured",
-    "connection_lost": "Connection lost"
+    "connection_lost": "Connection lost",
+    "preview_title": "Camera"
   }
 }

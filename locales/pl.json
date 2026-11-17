@@ -13,6 +13,7 @@
   },
   "device": {
     "no_address": "Nie skonfigurowano adresu",
-    "connection_lost": "Utracono połączenie"
+    "connection_lost": "Utracono połączenie",
+    "preview_title": "Kamera"
   }
 }
